@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:memeapp/homepage.dart';
+import 'package:memeapp/screens/welcomescreen.dart';
+//import 'package:homepage.dart';
+import 'homepage.dart';
 
 void main() {
   runApp(MyApp1());
 }
 
-class MyApp1 extends StatefulWidget{
+class MyApp1 extends StatefulWidget {
   @override
-MyApp createState() {
+  MyApp createState() {
     return MyApp();
   }
 }
@@ -17,9 +19,8 @@ class MyApp extends State<MyApp1> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-home: homepage(),
+      home: WelcomeScreen(),
     );
   }
- 
 }
 hello guys

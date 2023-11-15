@@ -42,6 +42,8 @@ dependencies:
   http: ^1.1.0
   dio: ^5.3.3
   screenshot: ^2.1.0
+  text_editor: ^0.7.0
+  google_fonts: ^6.1.0
 
 dev_dependencies:
   flutter_test:

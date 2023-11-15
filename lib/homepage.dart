@@ -1,13 +1,16 @@
 import 'dart:io';
+import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
 //import 'package:native_screenshot_ext/native_screenshot_ext.dart';
 import 'package:screenshot/screenshot.dart';
+import 'package:text_editor/text_editor.dart';
 class homepage extends StatefulWidget
 {
 @override
@@ -18,10 +21,16 @@ homepage1 createState()
 }
 class homepage1 extends State<homepage> 
 {
+   double fontsize1=10;
+  List<TextStyle> q=[GoogleFonts.aBeeZee(),GoogleFonts.actor(),GoogleFonts.aboreto(),GoogleFonts.akshar()];
+  bool visible=true;
+  int j=0;
+  double left=0.0,top=0.0;
+
   String x="";
   ScreenshotController screenshotController=ScreenshotController();
   TextEditingController controller=TextEditingController();
-  String? headertext,footertext;
+  String? headertext="here the meme text will be displayed",footertext;
   File? file1;
   File? image;
   Future pickImage(ImageSource source) async
@@ -58,14 +67,15 @@ class homepage1 extends State<homepage>
 savescreenshot(Uint8List bytes)async{
   final time=DateTime.now();
   final name="screensht";
-  
+  int fontsize=10;
   await ImageGallerySaver.saveImage(bytes,name: name);
 }
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      body:SingleChildScrollView(child:Column(
+      
+      body:SingleChildScrollView(padding: EdgeInsets.all(10),child:Column(
         children: [
         //  Image.network("https://images.pexels.com/photos/15286/pexels-photo.jpg"),
           SizedBox(height:50),
@@ -82,29 +92,66 @@ savescreenshot(Uint8List bytes)async{
 
       children: [
         //Image.network("https://images.pexels.com/photos/15286/pexels-photo.jpg"),
-        image!=null?Image.file(image!,height: 300,fit: BoxFit.cover,width: 300,):Container(height:300,
-        color: Colors.amber,
+        image!=null?Image.file(image!):Container(height:300,
+     
+        child: Image.network("https://media-cldnry.s-nbcnews.com/image/upload/t_fit-560w,f_auto,q_auto:best/rockcms/2022-01/210602-doge-meme-nft-mb-1715-8afb7e.jpg"),
 
         ),
         Align(
 alignment: Alignment.center,
-child: TextButton(child:Text("Click Here to Add Image"),onPressed: () {pickImage(ImageSource.gallery);},),
-        ),
-
-        Container(
-          padding: EdgeInsets.all(11),
-          child:Column(
-            
-            children: [
-              Text("${headertext}",style: TextStyle(color: Colors.white),),
-              
-              //Text("bye",style: TextStyle(color:Colors.white),)
-            ],
-          )
+child:
+Visibility(
+  visible: visible,
+  child:  
+TextButton(
+  
+  child:Text("Click Here to Add Image"),onPressed: () {
+    setState(() {
+      visible=false;
+    });
+    pickImage(ImageSource.gallery);},),
         )
+        )
+  ,
+SizedBox(height:10),
+        Positioned(
+          
+           left: left,
+                top:top,
+        //  padding: EdgeInsets.all(11),
+          child: 
+              GestureDetector(
+                onPanUpdate: (details){
+                setState(() {
+                  left=max(0, left+details.delta.dx);
+                top=max(0, top+details.delta.dy);
+                
+                });
+                },
+                onTap:(){} ,
+              child:Container(
+                color: Colors.green,
+                
+                child:Text("$headertext",style:q[j],
+                textScaleFactor: fontsize1,
+                ),
+              ))
+              )
+              //Text("bye",style: TextStyle(color:Colors.white),)
+            
+      
+        
       ],
           ) )),
-  //        SizedBox(height: 10,),
+            SizedBox(height: 10,),
+            ElevatedButton(onPressed: () {
+              setState(() {
+                j=(j+1);
+                int k=q.length;
+                j=j%k;
+                q[j];
+              });
+            }, child: Text("change font style")),
           TextField(
             controller: controller,
             onChanged:(value) {
@@ -116,16 +163,20 @@ child: TextButton(child:Text("Click Here to Add Image"),onPressed: () {pickImage
             hintText: "enter upper text",
             
           ),),
-          SizedBox(height: 10,),
-          TextField(
+          SizedBox(height:10),
+           TextField(
+       //     controller: controller,
             onChanged:(value) {
-             
-             // footertext=value!;
+              setState(() {
+                fontsize1=double.parse(value);
+              });
             },
             decoration: InputDecoration(
-            hintText: "enter footer text",  
-          ),
-          ),
+            hintText: "enter font size",
+            
+          ),),
+          SizedBox(height: 10,),
+          
           ElevatedButton(onPressed: (){takescreenshot(context);}
           , child: Text("Save"))    
           

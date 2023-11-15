@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:memeapp/Modal%20class/user.dart';
+import 'package:memeapp/Modal%20class/userer.dart';
 //import 'package:icons_plus/icons_plus.dart';
 import 'package:memeapp/screens/signin_screen.dart';
 import 'package:memeapp/theme/theme.dart';
 import 'package:memeapp/widgets/custom_scaffold.dart';
+import 'package:http/http.dart' as http;
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -12,6 +15,9 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  TextEditingController email=TextEditingController();
+  TextEditingController name=TextEditingController();
+  TextEditingController password=TextEditingController();
   final _formSignupKey = GlobalKey<FormState>();
   bool agreePersonalData = true;
   @override
@@ -48,6 +54,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       // full name
                       TextFormField(
+                        controller: name,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter Full name';
@@ -79,6 +86,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       // email
                       TextFormField(
+                        controller: email,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter Email';
@@ -110,6 +118,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       // password
                       TextFormField(
+                        controller: password,
                         obscureText: true,
                         obscuringCharacter: '*',
                         validator: (value) {
@@ -149,6 +158,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
+
                             if (_formSignupKey.currentState!.validate() &&
                                 agreePersonalData) {
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -163,6 +173,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                         'Please agree to the processing of personal data')),
                               );
                             }
+                          SaveRecord(context);
                           },
                           child: const Text('Sign up'),
                         ),
@@ -214,4 +225,44 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ),
     );
   }
+
+SaveRecord(context) async
+{
+User user= User(name.text.toString(),email.text.trim(),password.text.trim());
+try{
+var res=await http.post(Uri.parse(
+  "http://handycraf.000webhostapp.com/memeapp/signup.php"
+),body:user.toJson());
+if(res.statusCode==200)
+{
+  //var resBody1=jsonDecode(res.body);
+  String resBody=res.body;
+    if((resBody)=="false")
+  {
+ AlertDialog(
+        content: Text("Record Saved"),
+        actions: [ElevatedButton(onPressed: () {Navigator.pop(context);}, child: Text("O.K"))],
+
+      );    
+  }
+  else{
+    AlertDialog(
+        content: Text("Record not Saved"),
+        actions: [ElevatedButton(onPressed: () {Navigator.pop(context);}, child: Text("O.K"))],
+
+      );    
+  }
+}
+else{
+  AlertDialog(
+        content: Text("Record Saved"),
+        actions: [ElevatedButton(onPressed: () {Navigator.pop(context);}, child: Text("O.K"))],
+
+      );    
+}
+}
+catch(e){
+  print(e);
+}
+}
 }

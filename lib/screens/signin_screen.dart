@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:memeapp/apiconnection/userhttp.dart';
+import 'package:memeapp/homepage.dart';
 //import 'package:memeapp/icons_plus.dart';
 import 'package:memeapp/screens/signup_screen.dart';
 import 'package:memeapp/widgets/custom_scaffold.dart';
@@ -14,6 +16,8 @@ class SignInScreen extends StatefulWidget {
 
 class _SignInScreenState extends State<SignInScreen> {
   final _formSignInKey = GlobalKey<FormState>();
+  TextEditingController email=TextEditingController();
+  TextEditingController password=TextEditingController();
   bool rememberPassword = true;
   @override
   Widget build(BuildContext context) {
@@ -47,6 +51,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         height: 40.0,
                       ),
                       TextFormField(
+                        controller: email,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter Email';
@@ -77,6 +82,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         height: 25.0,
                       ),
                       TextFormField(
+                        controller: password,
                         obscureText: true,
                         obscuringCharacter: '*',
                         validator: (value) {
@@ -147,7 +153,36 @@ class _SignInScreenState extends State<SignInScreen> {
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: () {
+                            child: const Text('Sign up'),
+                          onPressed: ()  async {
+                             postApihttp http=postApihttp();
+                    await http.saveData(email.text.toString(),password.text.toString());
+                   int j=await http.givedata(0);
+                    if(j==0)
+                    {
+                      DateTime d=DateTime.now();
+                 	DateTime date=DateTime.now();
+  //String format=DateFormat('yyyy-MM-dd').format(date);
+  //DateTime ss=DateTime(date.year,date.month-1,date.day-1);
+  //String format1=DateFormat('yyyy-MM-dd').format(ss);   
+             //     httpServices21 htp=httpServices21();
+               // htp.del1(format1);
+                    Navigator.pushReplacement(
+                           context,
+                            MaterialPageRoute(
+                               builder: (context) =>  homepage(),
+                             ),
+                           );
+                          
+                  
+                    }
+                    
+                    else{
+                  showDialog(context: context, builder: ((context) => AlertDialog(
+                  title:Text("Invalid email or password entered"),
+                  content:ElevatedButton(child:Text("O.K"),onPressed: () {Navigator.pop(context);},))));
+                    }
+                   
                             if (_formSignInKey.currentState!.validate() &&
                                 rememberPassword) {
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -163,7 +198,7 @@ class _SignInScreenState extends State<SignInScreen> {
                               );
                             }
                           },
-                          child: const Text('Sign up'),
+                        
                         ),
                       ),
                       const SizedBox(

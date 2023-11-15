@@ -91,24 +91,24 @@ List<dynamic> data = jsonDecode(res.body);
 
       }
 
-        Future saverec(var id,var name,var product1,var product2,var product3,var price,var discount,
-        var sale,var category) async
+        Future saverec(var name,var product1,
+        var description,var category) async
       {
         var request = http.MultipartRequest('POST', Uri.parse("http://handy.ludokingatm.com/productupdateapi.php"));
    
         var pic=await http.MultipartFile.fromPath("photos1",product1);
-        var pic2=await http.MultipartFile.fromPath("photos2",product2);
-        var pic3=await http.MultipartFile.fromPath("photos3",product3);
+       // var pic2=await http.MultipartFile.fromPath("photos2",product2);
+        //var pic3=await http.MultipartFile.fromPath("photos3",product3);
         
       
         request.files.add(pic);
-        request.files.add(pic2);
-        request.files.add(pic3);
-        request.fields['id']=id.toString();
+      //  request.files.add(pic2);
+       // request.files.add(pic3);
+      //  request.fields['id']=id.toString();
         request.fields['name']=name.toString();
-        request.fields['price']=price.toString();
-        request.fields['discount']=discount.toString();
-        request.fields['sale']=sale.toString();
+       // request.fields['price']=price.toString();
+       // request.fields['discount']=discount.toString();
+        request.fields['description']=sale.toString();
         request.fields['category']=category.toString();
     
     http.StreamedResponse response = await request.send();

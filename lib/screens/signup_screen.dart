@@ -239,15 +239,13 @@ if(res.statusCode==200)
   String resBody=res.body;
     if((resBody)=="false")
   {
- AlertDialog(
-        content: Text("Record Saved"),
-        actions: [ElevatedButton(onPressed: () {Navigator.pop(context);}, child: Text("O.K"))],
-
-      );    
+ Future.delayed(Duration.zero,()=>showDialog(context: context, builder: ((context) => AlertDialog(
+                  title:Text("Record Saved Now go to gallery"),
+                  content:ElevatedButton(child:Text("O.K"),onPressed: () {Navigator.pop(context);},)))));   
   }
   else{
     AlertDialog(
-        content: Text("Record not Saved"),
+        content: Text("Record already exist"),
         actions: [ElevatedButton(onPressed: () {Navigator.pop(context);}, child: Text("O.K"))],
 
       );    
@@ -255,7 +253,7 @@ if(res.statusCode==200)
 }
 else{
   AlertDialog(
-        content: Text("Record Saved"),
+        content: Text("Record Saved now go to login page"),
         actions: [ElevatedButton(onPressed: () {Navigator.pop(context);}, child: Text("O.K"))],
 
       );    

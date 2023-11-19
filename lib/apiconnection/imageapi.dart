@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 
 //import '.dart';
 import 'package:memeapp/Modal class/imagemodal.dart';
+import 'package:memeapp/Modal%20class/usermemeModal.dart';
 
 var dd;
 var category = "Wall Painting";
@@ -18,19 +19,21 @@ class httpServices13 {
     return y;
   }
 
-  Future<List<prodModal>> getAllPost(var key) async {
+  Future<List<prodModal>> getAllPost(String key) async {
     print("haan");
-    print(key);
+   // print(key);
     Response res = await get(Uri.parse(
-        "http://handy.ludokingatm.com/productshowapi.php/?key=" + key));
+        "http://handycraf.000webhostapp.com/memeapp/fetchimageapi.php?key=$key"));
     if (res.statusCode == 200) {
       //Map<String,dynamic> data1 = jsonDecode(res.body);
 
       List<dynamic> data = jsonDecode(res.body);
       List<prodModal> allPost =
           data.map((dynamic item) => prodModal.fromJson(item)).toList();
-      print(allPost[0].category);
-      y = allPost.length;
+          print("gggg");
+     //     print(allPost[6].product1.toString());
+     y = allPost.length;
+     print(y);
       return allPost;
     } else {
       throw "Something Went Wrong";
@@ -54,16 +57,16 @@ class httpServices13 {
     }
   }
 
-  Future<List<prodModal>> getAllPost1(var ss) async {
-    Response res = await get(Uri.parse(baseUrl1 + ss));
+  Future<List<usermeme>> getAllPost1(var ss) async {
+    Response res = await get(Uri.parse( "https://handycraf.000webhostapp.com/memeapp/fetchuser.php?key="+ss));
     if (res.statusCode == 200) {
-      //Map<String,dynamic> data1 = jsonDecode(res.body);
-
+      print(ss);
       List<dynamic> data = jsonDecode(res.body);
-      List<prodModal> allPost =
-          data.map((dynamic item) => prodModal.fromJson(item)).toList();
-      print(allPost[0].category);
+      List<usermeme> allPost =
+          data.map((dynamic item) => usermeme.fromJson(item)).toList();
+    
       y = allPost.length;
+      print(allPost[0].name);
       return allPost;
     } else {
       throw "Something Went Wrong";
@@ -90,24 +93,15 @@ class httpServices13 {
     }
   }
 
-  Future saverec(var name, var product1, var description, var category) async {
+  Future saverec(var email, var product1) async {
     var request = http.MultipartRequest(
-        'POST', Uri.parse("http://handy.ludokingatm.com/productupdateapi.php"));
+        'POST', Uri.parse("https://handycraf.000webhostapp.com/memeapp/usermeme.php"));
 
     var pic = await http.MultipartFile.fromPath("photos1", product1);
-    // var pic2=await http.MultipartFile.fromPath("photos2",product2);
-    //var pic3=await http.MultipartFile.fromPath("photos3",product3);
-
+    
     request.files.add(pic);
-    //  request.files.add(pic2);
-    // request.files.add(pic3);
-    //  request.fields['id']=id.toString();
-    request.fields['name'] = name.toString();
-    // request.fields['price']=price.toString();
-    // request.fields['discount']=discount.toString();
-    request.fields['description'] = description.toString();
-    request.fields['category'] = category.toString();
-
+  
+    request.fields['email'] = email.toString();
     http.StreamedResponse response = await request.send();
 
     if (response.statusCode == 200) {
@@ -122,7 +116,7 @@ class httpServices13 {
     }
   }
 
-  Future saverec1(var name, var product1, var description, var category) async {
+  Future saverec1(var name, String product1, var description, var category) async {
     print("kkk");
     print(sid);
     var request = http.MultipartRequest('POST',
@@ -130,13 +124,11 @@ class httpServices13 {
     var pic = await http.MultipartFile.fromPath("photos1", product1);
     request.files.add(pic);
 
-    //  request.fields['s_id']=sid;
+    
     request.fields['name'] = name;
     request.fields['description'] = description;
-    //  request.fields['discount']=discount;
-    // request.fields['sale']=sale;
     request.fields['category'] = category;
-    //  request.fields['s_id']=sid;
+    
     http.StreamedResponse response = await request.send();
 
     if (response.statusCode == 200) {

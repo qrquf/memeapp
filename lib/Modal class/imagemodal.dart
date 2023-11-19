@@ -14,7 +14,7 @@ class prodModal {
   prodModal.fromJson(Map<String, dynamic> json) {
 
     name = json['name'];
-    product1 = json['product1'];
+    product1 = json['address'];
    description=json['description'];
     category = json['category'];
   }
@@ -23,7 +23,7 @@ class prodModal {
     final Map<String, dynamic> data = new Map<String, dynamic>();
   
     data['name'] = this.name;
-    data['product1'] = this.product1;
+    data['address'] = this.product1;
     data['category'] = this.category;
     data['description']=this.description;
     return data;

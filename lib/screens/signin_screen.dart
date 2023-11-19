@@ -137,6 +137,7 @@ class _SignInScreenState extends State<SignInScreen> {
                               ),
                             ],
                           ),
+                          /*
                           GestureDetector(
                             child: Text(
                               'Forget password?',
@@ -145,7 +146,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                 color: lightColorScheme.primary,
                               ),
                             ),
-                          ),
+                          ),*/
                         ],
                       ),
                       const SizedBox(
@@ -168,10 +169,10 @@ class _SignInScreenState extends State<SignInScreen> {
                               //String format1=DateFormat('yyyy-MM-dd').format(ss);
                               //     httpServices21 htp=httpServices21();
                               // htp.del1(format1);
-                              Navigator.pushReplacement(
+                              Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => HomePage(),
+                                  builder: (context) => HomePage(id: "",email1:email.text.toString()),
                                 ),
                               );
                             } else {

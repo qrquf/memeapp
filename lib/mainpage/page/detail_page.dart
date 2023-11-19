@@ -1,17 +1,41 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:memeapp/Modal%20class/imagemodal.dart';
+import 'package:screenshot/screenshot.dart';
 
 import '../model/food.dart';
-
+String a="",b="",c="";
 class DetailPage extends StatefulWidget {
-  const DetailPage({Key? key, required this.food}) : super(key: key);
-  final Food food;
-
-  @override
-  State<DetailPage> createState() => _DetailPageState();
+  DetailPage({name,img,description})
+  {
+    a=name;
+    b=img;
+    c=description;
+  }
+ @override
+ _DetailPageState createState()
+ {
+  return _DetailPageState();
+ }
 }
 
 class _DetailPageState extends State<DetailPage> {
+ScreenshotController controller=ScreenshotController();
   int quantity = 1;
+  takescreenshot(BuildContext context) {
+    controller.capture().then((Uint8List? image) {
+      savescreenshot(image!);
+    });
+  }
+
+  savescreenshot(Uint8List bytes) async {
+    final time = DateTime.now();
+    final name = "screensht";
+    int fontsize = 10;
+    await ImageGallerySaver.saveImage(bytes, name: name);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,8 +45,19 @@ class _DetailPageState extends State<DetailPage> {
           const SizedBox(height: 20),
           header(),
           const SizedBox(height: 20),
-          image(),
+          Screenshot(child: image(), controller: controller)
+          ,
           details(),
+          SizedBox(height:10),
+          ElevatedButton(onPressed: (){
+               AlertDialog(
+        content: Text("Image saved to gallery"),
+        actions: [ElevatedButton(onPressed: () {Navigator.pop(context);}, child: Text("O.K"))],
+
+      );
+            takescreenshot(context);
+         
+          }, child: Text("save to gallery"))
         ],
       ),
     );
@@ -55,6 +90,7 @@ class _DetailPageState extends State<DetailPage> {
                     //       fontWeight: FontWeight.bold,
                     //       color: Colors.green,
                     //     )),
+                    
                   ],
                 ),
               ),
@@ -63,30 +99,7 @@ class _DetailPageState extends State<DetailPage> {
                 // borderRadius: BorderRadius.circular(30),
                 child: Row(
                   children: [
-                    // IconButton(
-                    //   onPressed: () {
-                    //     if (quantity > 1) {
-                    //       quantity -= 1;
-                    //       setState(() {});
-                    //     }
-                    //   },
-                    //   icon: const Icon(Icons.remove, color: Colors.white),
-                    // ),
-                   // const SizedBox(width: 4),
-                    // Text(
-                    //   '$quantity',
-                    //   style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                    //         color: Colors.white,
-                    //       ),
-                    // ),
-                   // const SizedBox(width: 4),
-                    // IconButton(
-                    //   onPressed: () {
-                    //     quantity += 1;
-                    //     setState(() {});
-                    //   },
-                    //   icon: const Icon(Icons.add, color: Colors.white),
-                    // ),
+                    
                   ],
                 ),
               ),
@@ -135,7 +148,7 @@ class _DetailPageState extends State<DetailPage> {
           ),
           const SizedBox(height: 16),
           Text(
-            widget.food.description,
+            c,
             style: const TextStyle(
               fontSize: 16,
               color: Colors.black54,
@@ -205,12 +218,12 @@ class _DetailPageState extends State<DetailPage> {
                 borderRadius: BorderRadius.circular(250),
               ),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(250),
-                child: Image.asset(
-                  widget.food.image,
+                borderRadius: BorderRadius.circular(10),
+                child: Image.network(
+                  b,
                   fit: BoxFit.cover,
-                  width: 250,
-                  height: 250,
+                  width: 400,
+                  height: 300,
                 ),
               ),
             ),

@@ -1,53 +1,199 @@
+
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:memeapp/Modal%20class/imagemodal.dart';
+import 'package:memeapp/apiconnection/imageapi.dart';
+import 'package:memeapp/draft.dart';
+import 'package:memeapp/homepage.dart';
 import 'package:memeapp/mainpage/model/food.dart';
 import 'package:memeapp/mainpage/page/detail_page.dart';
-
+import 'package:memeapp/uploadmeme.dart';
+httpServices13 http=httpServices13();
+int indexCategory=0;
+String key="",email="";
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  HomePage({String id="",String email1=""})
+  {
+    key=id;
+    email=email1;
+  }
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  _HomePageState  createState()
+  {
+    return _HomePageState();
+  }
+  
 }
 
+
 class _HomePageState extends State<HomePage> {
+  void init()
+  {
+    super.initState();
+  }
   int indexCategory = 0;
+  
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+  
+  
+ return 
+ FutureBuilder<List<prodModal>>  
+      (
+      
+        future: http.getAllPost(key),
+        builder: ((context, snapshot) {
+       print("calm down");
+      // print(key);  
+        switch(snapshot.connectionState)
+        {  
+          case ConnectionState.none:
+         
+            return Scaffold(
+              
+              body: Center(
+                heightFactor: 1.4,
+                child:CircularProgressIndicator(
+                  
+                )
+              ),
+            );
+          case ConnectionState.waiting:
+          return Scaffold(
+            body: Center(
+                heightFactor: 0.4,
+                child:CircularProgressIndicator()
+              ),
+          );
+          case ConnectionState.active:
+           return
+            
+           ShowPostList(context,snapshot.data!);
+          
+         case ConnectionState.done:
+         
+         //return CircularProgressIndicator();
+           return ShowPostList(context,snapshot.data!);
+          
+        } 
+          //}
+        
+        //else{
+          //return CircularProgressIndicator();
+        //}
+        
+        
+        //  return CircularProgressIndicator();
+        }),
+
+      );
+  }
+  
+
+  
+  
+  
+  Widget ShowPostList(BuildContext context,List<prodModal> posts) {return
+  MaterialApp(  
+   
+  home:Scaffold(
+      appBar: AppBar(leading: IconButton(icon:Icon(Icons.menu),
+      onPressed: (){
+      }),),
+      drawer: Drawer(
+        child:ListView(
+          children: <Widget>[
+          ListTile(
+            leading:Icon(Icons.create),
+            title: const Text("make your own meme"),
+            onTap: () {Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>  HomePage()
+                            ),
+                          );},
+          ),
+          ListTile(
+            leading:Icon(Icons.upload),
+            title:Text("upload a meme"),
+            onTap:(){
+            }
+          )
+          ]
+        )
+      ),
+      floatingActionButton:IconButton(
+        color: Colors.blue,
+        onPressed: (){
+    
+        Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>homepage2(),
+                                ),
+                              );
+      }, icon:Icon(Icons.add)),
       backgroundColor: Colors.white,
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        selectedItemColor: Colors.green,
-        unselectedItemColor: Colors.green[200],
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+    //  bottomNavigationBar: BottomNavigationBar(
+      //  type: BottomNavigationBarType.fixed,
+       // showSelectedLabels: false,
+       // showUnselectedLabels: false,
+       // selectedItemColor: Colors.green,
+       // unselectedItemColor: Colors.green[200],
+       // items: const [
+         // BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           //BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Chat'),
         //  icon: Icon(Icons.shopping_cart), label: 'Cart'),
          // BottomNavigationBarItem(
               //icon: Icon(Icons.notifications), label: 'Notification'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.favorite), label: 'Favorite'),
-        ],
-      ),
+       //   BottomNavigationBarItem(
+     //         icon: Icon(Icons.favorite), label: 'Favorite'),
+       // ],
+      //),
       body: ListView(
         children: [
 
           const SizedBox(height: 16),
-          header(),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child:
+          Row(
+            children: [
+              Chip(label: InkWell(child:Text("Create your own meme"),onTap: (){
+                 Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => homepage2(em: email,iss:""),
+                                ),
+                              );
+                              //homepage2();
+              },),),
+              SizedBox(height:10,width: 10,),
+              Chip(label: InkWell(child:Text("upload your Meme"),onTap: (){
+                Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => uploadmeme(),
+                                ),
+                              );
+              },)),
+              SizedBox(height:10,width: 10,),
+           
+            ],
+          )),
+      //    header(),
           const SizedBox(height: 30),
           title(),
           const SizedBox(height: 20),
-          search(),
+        search(context),
           const SizedBox(height: 30),
-          categories(),
+          categories(context),
           const SizedBox(height: 20),
-          gridFood(),
+          gridFood(context,posts),
         ],
       ),
-    );
+    ));
   }
 
   Widget header() {
@@ -59,7 +205,9 @@ class _HomePageState extends State<HomePage> {
             color: Colors.grey[300],
             borderRadius: BorderRadius.circular(8),
             child: InkWell(
-              onTap: () {},
+              onTap: () {
+                
+              },
               borderRadius: BorderRadius.circular(8),
               child: Container(
                 height: 40,
@@ -75,8 +223,8 @@ class _HomePageState extends State<HomePage> {
           const Spacer(),
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
-            child: Image.asset(
-              'asset/salad.webp',
+            child: Image.network(
+              'https://us.123rf.com/450wm/hijackhippo/hijackhippo1810/hijackhippo181000034/109723477-letter-tiles-on-black-slate-background-spelling-memes.jpg?ver=6',
               fit: BoxFit.cover,
               width: 40,
               height: 40,
@@ -114,7 +262,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget search() {
+  Widget search(BuildContext context) {
+    
     return Container(
       height: 60,
       margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -127,8 +276,21 @@ class _HomePageState extends State<HomePage> {
         children: [
           Expanded(
             child: TextField(
+            
+              onChanged: (value){
+
+             key=value;
+              },
               decoration: InputDecoration(
+                
                 border: InputBorder.none,
+                suffixIcon: IconButton(icon: Icon(Icons.arrow_circle_right_rounded),
+                onPressed: (){
+                  setState(() {
+             
+            });
+            
+                },),
                 prefixIcon: const Icon(Icons.search, color: Colors.redAccent),
                 hintText: 'Search Meme',
                 hintStyle: TextStyle(color: Colors.grey[600]),
@@ -153,9 +315,11 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+  
+  
 
-  Widget categories() {
-    List list = ['Trending','Cartoon', 'Movie', 'Animal', 'Anime', 'Ads', 'Personality'];
+  Widget categories(BuildContext context) {
+    List list = ['Trending','comedy', 'Movie', 'Animal', 'Anime', 'Ads', 'Personality','sarcasm'];
     return SizedBox(
       height: 30,
       child: ListView.builder(
@@ -164,8 +328,11 @@ class _HomePageState extends State<HomePage> {
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
+              setState(() {
+                key=list[index];
+              });
               indexCategory = index;
-              setState(() {});
+              (() {});
             },
             child: Container(
               padding: EdgeInsets.fromLTRB(
@@ -190,9 +357,9 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget gridFood() {
+  Widget gridFood(BuildContext context,List<prodModal> posts) {
     return GridView.builder(
-      itemCount: dummyFoods.length,
+      itemCount: posts.length,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       padding: const EdgeInsets.all(16),
@@ -203,11 +370,14 @@ class _HomePageState extends State<HomePage> {
         mainAxisExtent: 260,
       ),
       itemBuilder: (context, index) {
-        Food food = dummyFoods[index];
+         var prodImage="http://handycraf.000webhostapp.com/memeapp/fileupload1/"+posts[index].product1.toString();
+        
         return GestureDetector(
           onTap: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return DetailPage(food: food);
+              return DetailPage(name: posts[index].name,
+              description: posts[index].description,
+              img: prodImage,);
             }));
           },
           child: Container(
@@ -225,8 +395,8 @@ class _HomePageState extends State<HomePage> {
                     Center(
                       child: ClipRRect(
                         //borderRadius: BorderRadius.circular(1),
-                        child: Image.asset(
-                          food.image,
+                        child: Image.network(
+                          prodImage,
                           width: 150,
                           height: 150,
                           fit: BoxFit.cover,
@@ -304,4 +474,5 @@ class _HomePageState extends State<HomePage> {
       },
     );
   }
-}
+} 
+

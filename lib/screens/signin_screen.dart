@@ -115,29 +115,29 @@ class _SignInScreenState extends State<SignInScreen> {
                       const SizedBox(
                         height: 25.0,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Checkbox(
-                                value: rememberPassword,
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    rememberPassword = value!;
-                                  });
-                                },
-                                activeColor: lightColorScheme.primary,
-                              ),
-                              const Text(
-                                'Remember me',
-                                style: TextStyle(
-                                  color: Colors.black45,
-                                ),
-                              ),
-                            ],
-                          ),
-                          /*
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //   children: [
+                      //     Row(
+                      //       children: [
+                      //         Checkbox(
+                      //           value: rememberPassword,
+                      //           onChanged: (bool? value) {
+                      //             setState(() {
+                      //               rememberPassword = value!;
+                      //             });
+                      //           },
+                      //           activeColor: lightColorScheme.primary,
+                      //         ),
+                      //         const Text(
+                      //           'Remember me',
+                      //           style: TextStyle(
+                      //             color: Colors.black45,
+                      //           ),
+                      //         ),
+                      //       ],
+                      //     ),
+                      /*
                           GestureDetector(
                             child: Text(
                               'Forget password?',
@@ -147,15 +147,15 @@ class _SignInScreenState extends State<SignInScreen> {
                               ),
                             ),
                           ),*/
-                        ],
-                      ),
+                      //],
+                      //),
                       const SizedBox(
                         height: 25.0,
                       ),
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          child: const Text('Sign up'),
+                          child: const Text('Sign in'),
                           onPressed: () async {
                             postApihttp http = postApihttp();
                             await http.saveData(email.text.toString(),
@@ -172,7 +172,8 @@ class _SignInScreenState extends State<SignInScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => HomePage(id: "",email1:email.text.toString()),
+                                  builder: (context) => HomePage(
+                                      id: "", email1: email.text.toString()),
                                 ),
                               );
                             } else {

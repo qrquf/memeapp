@@ -1,5 +1,7 @@
 import 'dart:ui';
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:memeapp/Modal%20class/imagemodal.dart';
 import 'package:memeapp/apiconnection/imageapi.dart';
 import 'package:memeapp/draft.dart';
@@ -74,7 +76,25 @@ class _HomePageState extends State<HomePage> {
         home: Scaffold(
           backgroundColor: Color.fromARGB(255, 36, 36, 36),
           appBar: AppBar(
-            backgroundColor: Colors.black,
+            title: AnimatedTextKit(
+  animatedTexts: [
+    TypewriterAnimatedText(
+      'Welcome to Meme World',
+      textStyle: GoogleFonts.cedarvilleCursive(
+        color: Colors.white,
+        fontSize: 30.0,
+        fontWeight: FontWeight.bold,
+      ),
+      speed: const Duration(milliseconds: 500),
+    ),
+  ],
+  
+  totalRepeatCount: 2,
+  pause: const Duration(milliseconds: 2000),
+  displayFullTextOnTap: true,
+  stopPauseOnTap: true,
+)
+              , backgroundColor: Color.fromARGB(255, 2, 40, 72)
           ),
           // drawer: Drawer(
           //     child: ListView(children: <Widget>[

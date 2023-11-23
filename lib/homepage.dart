@@ -13,9 +13,10 @@ import 'package:memeapp/mainpage/page/home_page.dart';
 //import 'package:native_screenshot_ext/native_screenshot_ext.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:text_editor/text_editor.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
-double fontsize1 = 3;
-double _currentSliderValue = 0;
+double fontsize1 = 7;
+double _currentSliderValue = 10;
 String h = "";
 String email = "";
 var real = Colors.black;
@@ -38,14 +39,14 @@ class homepage1 extends State<homepage2> {
   }
 
   List<String> img = [
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Open_Sans_sample.svg/1200px-Open_Sans_sample.svg.png",
-    "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcR36DKU7wsGXKHsk_JI90LkrHfnj4UdRcKhRwafz-C3fhDuC_fK",
-    "https://upload.wikimedia.org/wikipedia/commons/8/84/Montserrat_Specimen.png",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/SourceSansPro-sample.svg/800px-SourceSansPro-sample.svg.png",
+    "https://d144mzi0q5mijx.cloudfront.net/img/C/E/Cedarville-Cursive.png",
+    "https://www.cufonfonts.com/images/thumb/15868/actor-741x415-5840209885.jpg",
+    "https://pbs.twimg.com/media/FdVP-RiWQAAWqdN.png:large",
+    "https://www.cufonfonts.com/images/thumb/107308/akshar-741x415-7bef2e225b.jpg",
     "https://imgs.fontbrain.com/imgs/3a/d8/58f18d2ee7bf6afc4155b15ffb6f/pt-720x360-5f5562.png"
   ];
   List<Color> cc = [
-    Colors.black,
+    Colors.white,
     Colors.green,
     Colors.deepOrange,
     Colors.blue,
@@ -55,13 +56,15 @@ class homepage1 extends State<homepage2> {
   ];
 
   bool visible = true;
+  //bool textvisible=false;
+  //bool imagevisible=false;
   int j = 0, xx = 0;
-  double left = 0.0, top = 0.0;
-
+  double left = 80.0, top = 40.0;
+int _selectedindex=0;
   String x = "";
   ScreenshotController screenshotController = ScreenshotController();
   TextEditingController controller = TextEditingController();
-  String? headertext = "here the meme text will be displayed", footertext;
+  String? headertext = "Text Space", footertext;
   File? file1;
   File? image;
   File? image5;
@@ -103,13 +106,13 @@ class homepage1 extends State<homepage2> {
     int fontsize = 10;
     var response = await ImageGallerySaver.saveImage(bytes, name: name);
 
-/*
+
     Future.delayed(Duration.zero,()=>showDialog(context: context, builder: ((context) => AlertDialog(
                   title:Text("Image saved to Gallery"),
                   content:ElevatedButton(child:Text("O.K"),onPressed: () {Navigator.pop(context);},)))));
                   setState(() {
                     image5;
-                  });*/
+                  });
   }
 
   @override
@@ -137,21 +140,85 @@ class homepage1 extends State<homepage2> {
         color: real,
       ))
     ];
+    void _onItemTapped(int index) {
+  setState(() {
+    _selectedindex = index;
+    if(_selectedindex==0)
+    {
+     takescreenshot(context); 
+    }
+    if(_selectedindex==1)
+    {
+      pickImage(ImageSource.gallery);
+    }
+  });}
     // TODO: implement build
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex:_selectedindex ,
+          onTap: _onItemTapped,
+          selectedItemColor: Colors.blue,
+          items: [
+            
+          BottomNavigationBarItem(icon: Icon(Icons.text_fields,
+          ),
+          
+          label:"Save"),
+          BottomNavigationBarItem(icon: Icon(Icons.image),
+          label:"Add Image",
+          
+          
+          )
+        
+          
+        ]
+        ),
             appBar: AppBar(
               leading: IconButton(
                   icon: Icon(Icons.arrow_back),
                   onPressed: () {
                     Navigator.pop(context);
+
                   }),
+                  
             ),
-            body: SingleChildScrollView(
-              padding: EdgeInsets.all(10),
+            body: 
+            
+            SingleChildScrollView(
+        
+             
+              child:Container(
+                 padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(colors: [
+                    Colors.black,
+                    Colors.purple
+                  ])
+                ),
               child: Column(
                 children: [
+                 // matedTextKit is a Stateful Widget that produces text animations. Include it in your build method like:
+
+AnimatedTextKit(
+  animatedTexts: [
+    TypewriterAnimatedText(
+      'Create Your Own meme',
+      textStyle: const TextStyle(
+        color: Colors.white,
+        fontSize: 32.0,
+        fontWeight: FontWeight.bold,
+      ),
+      speed: const Duration(milliseconds: 1000),
+    ),
+  ],
+  
+  totalRepeatCount: 4,
+  pause: const Duration(milliseconds: 500),
+  displayFullTextOnTap: true,
+  stopPauseOnTap: true,
+),
                   //  Image.network("https://images.pexels.com/photos/15286/pexels-photo.jpg"),
                   SizedBox(height: 50),
                   //Image.network("https://images.pexels.com/photos/15286/pexels-photo.jpg"),
@@ -159,27 +226,36 @@ class homepage1 extends State<homepage2> {
                       height: 400,
                       width: 500,
                       child: Screenshot(
+                      
                           controller: screenshotController,
                           //          key:globalkey,
                           child: Stack(
                             children: [
+                              
+                              
                               //Image.network("https://images.pexels.com/photos/15286/pexels-photo.jpg"),
                               image != null
-                                  ? Image.file(image!)
+                                  ? Container(
+                                    height:double.infinity,
+                                    width:double.infinity,
+                                    child:Image.file(image!,fit: BoxFit.fill,))
                                   : h != ""
                                       ? Image.network(h,
                                           height: 400, width: 400)
                                       : Container(
-                                          height: 300,
-                                          child: Image.network(
-                                              "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-560w,f_auto,q_auto:best/rockcms/2022-01/210602-doge-meme-nft-mb-1715-8afb7e.jpg"),
+                                         // height: 300,
+                                        
                                         ),
                               Align(
                                   alignment: Alignment.center,
                                   child: Visibility(
                                     visible: visible,
                                     child: TextButton(
-                                      child: Text("Click Here to Add Image"),
+                                      child: Text("Click Here to Add Image",
+                                      style: GoogleFonts.cedarvilleCursive(color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 30,
+                                      ),),
                                       onPressed: () {
                                         setState(() {
                                           visible = false;
@@ -216,6 +292,27 @@ class homepage1 extends State<homepage2> {
                   SizedBox(
                     height: 10,
                   ),
+                  
+                  TextFormField(
+                    style: TextStyle(color:Colors.white),
+                    maxLines: null,
+                    controller: controller,
+                    onChanged: (value) {
+                      setState(() {
+                        headertext = value;
+                      });
+                    },
+                    decoration: InputDecoration(
+                       
+                      
+                      border: InputBorder.none,
+                      hintText: "enter text of meme",
+                      hintStyle: TextStyle(
+                        color: Colors.white
+                      )
+                    ),
+                  ),
+                  SizedBox(height:10),
                   SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: GestureDetector(
@@ -229,19 +326,27 @@ class homepage1 extends State<homepage2> {
                         child: Row(children: [
                           for (int i = 0; i < 5; i++)
                             Container(
-                              height: 100,
+                              padding: EdgeInsets.all(5),
+                              child:
+                            Container(
+                             
+                              height: 70,
                               width: 150,
-                              child: Image.network(img[i]),
-                            )
+                              child: Image.network(img[i],fit: BoxFit.fill,),
+                            ))
                         ]),
                       )),
                   SizedBox(height: 10),
                   SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
-                      child: Row(
+                      child: 
+                      Row(
+                      
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           for (int i = 0; i < 5; i++)
                             GestureDetector(
+                              
                                 onTap: () {
                                   setState(() {
                                     real = cc[i];
@@ -249,10 +354,18 @@ class homepage1 extends State<homepage2> {
                                   });
                                 },
                                 child: Container(
+                                  padding: EdgeInsets.all(5),
+                               child:Container(
+                                  decoration: BoxDecoration(
+                                     color: cc[i],
+                                    borderRadius: BorderRadius.all(Radius.circular(70))
+                                  ),
+                                  
                                   height: 100,
                                   width: 100,
-                                  color: cc[i],
-                                ))
+                                 
+                                ))),
+                                
                         ],
                       )),
                   Slider(
@@ -267,31 +380,8 @@ class homepage1 extends State<homepage2> {
                         });
                       }),
 
-                  TextField(
-                    maxLines: null,
-                    controller: controller,
-                    onChanged: (value) {
-                      setState(() {
-                        headertext = value;
-                      });
-                    },
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: "enter text of meme",
-                    ),
-                  ),
-
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ElevatedButton(
-                            onPressed: () {
-                              takescreenshot(context);
-                            },
-                            child: Text("Save to gallery")),
-                      ])
                 ],
               ),
-            )));
+            ))));
   }
 }

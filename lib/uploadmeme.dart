@@ -62,6 +62,9 @@ class uploadstate extends State<uploadmeme> {
                           pickImage(ImageSource.gallery);
                         },
                         child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(40))
+                          ),
                             height: 200,
                             width: 200,
                             child: Container(
